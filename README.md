@@ -84,7 +84,7 @@ By default, **reminderd** stores reminders in the `$HOME/.local/share/reminders`
 To ensure that **reminderd** runs on startup, add the following line to your `~/.xinitrc` or similar startup script:
 
 ```bash
-/usr/local/bin/reminderd &
+reminderd &
 ```
 
 This will start **reminderd** in the background, and it will continuously check for due reminders.
@@ -94,10 +94,8 @@ This will start **reminderd** in the background, and it will continuously check 
 Here's an example of how to use **reminderctl** to add a reminder:
 
 ```bash
-reminderctl add "2023-12-31 23:59" "New Year's Eve Party" "Don't forget to bring snacks and drinks!" "party-icon.png"
+reminderctl add "2023-12-31 2:00 PM" "dinner time" "go eat" ~/Pictures/svg/burger.svg
 ```
-
-This command adds a reminder for a New Year's Eve party, displaying a notification with the specified details and icon when the time comes.
 
 ## Contributing
 
