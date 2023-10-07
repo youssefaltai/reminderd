@@ -108,7 +108,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Thanks to the [dunst](https://dunst-project.org/) project for providing a simple and effective way to display notifications.
-
----
-
-Enjoy staying organized with **reminderd**! If you have any questions or encounter issues, feel free to [open an issue](https://github.com/youssef-attai/reminderd/issues).
