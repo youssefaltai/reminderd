@@ -1,14 +1,13 @@
 # reminderd
 
-**reminderd** is a simple daemon designed to keep you organized by sending notifications for due reminders. Whether you need to remember important tasks, deadlines, or events, this lightweight utility has you covered.
+**reminderd** is a simple daemon designed to keep you organized by sending notifications for due reminders.
 
 ## Overview
 
 ### Features
 
-- **Reminder Notifications**: reminderd periodically checks for due reminders and sends notifications using dunstify, making sure you never miss an important task.
+- **Reminder Notifications**: reminderd periodically checks for due reminders and sends notifications using `dunstify`.
 - **Easy-to-Use**: Add, remove, and list reminders using the companion script, **reminderctl**.
-- **Customization**: Set reminders with custom due dates, summaries, additional information, and icons.
 
 ### Usage Scenario
 
@@ -111,10 +110,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Thanks to the [dunst](https://dunst-project.org/) project for providing a simple and effective way to display notifications.
-
-## Disclaimer
-
-**reminderd** is a simple utility and may not be suitable for all use cases. Please use it responsibly, especially in scenarios where timely reminders are critical.
 
 ---
 
