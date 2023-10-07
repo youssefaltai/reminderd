@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# This script is used to check if there are any reminders that need to be
+# notified. It is meant to be run on startup from xinitrc or similar, and
+# should keep running in the background.
+
+# Reminders are stored in the following format:
+# <time>
+# <summary>
+# <body>
+# <icon>
+
+# The reminder daemon will check for reminders every 30 seconds.
+# If a reminder is due, it will be displayed using dunstify.
+
+REMINDERS_DIR="$HOME/.local/share/reminders"
+
+# Check if the reminders directory exists
+function check_dir {
+    if [ ! -d "$REMINDERS_DIR" ]; then
+        mkdir "$REMINDERS_DIR"
+    fi
+}
+
+# Check if the reminders directory is empty
+function is_empty {
+    if [ "$(ls -A $REMINDERS_DIR)" ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Check if a reminder is due
+function is_due {
+    local reminder="$1"
+    local now=$(date +%s)
+    local due=$(cat "$reminder" | head -n 1)
+    if [ "$now" -ge "$due" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Display a reminder
+function display {
+    local reminder_file="$1"
+
+    due=$(cat "$reminder_file" | head -n 1)
+    summary=$(cat "$reminder_file" | head -n 2 | tail -n 1)
+    body=$(cat "$reminder_file" | head -n 3 | tail -n 1)
+    icon=$(cat "$reminder_file" | head -n 4 | tail -n 1)
+
+    dunstify "$summary" "$body" -i "$icon" -t 0
+}
+
+# Remove a reminder
+function remove {
+    local reminder="$1"
+    rm "$reminder"
+}
+
+# Check for reminders
+function check {
+    for reminder in "$REMINDERS_DIR"/*; do
+        if is_due "$reminder"; then
+            display "$reminder"
+            remove "$reminder"
+        fi
+    done
+}
+
+# Main loop
+function main {
+    check_dir
+    while true; do
+        if ! is_empty; then
+            check
+        fi
+        sleep 1
+    done
+}
+
+main

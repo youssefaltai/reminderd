@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+# This script is used to add, remove, and list reminders.
+# It is meant to be used with the reminderd daemon.
+
+REMINDERS_DIR="$HOME/.local/share/reminders"
+
+function add_reminder {
+  local due="$1"
+  local summary="$2"
+  local body="$3"
+  local icon="$4"
+
+  if [[ -z "$due" ]]; then
+    echo "Usage: $0 add <due> <summary> [body] [icon]"
+    exit 1
+  fi
+
+  due_datetime=$(date -d "$due" +"%s")
+  # if date is invalid, due_datetime will be empty
+  if [[ -z "$due_datetime" ]]; then
+    echo "Please enter a valid date."
+    exit 1
+  fi
+
+  if [[ -z "$summary" ]]; then
+    echo "Usage: $0 add <due> <summary> [body] [icon]"
+    exit 1
+  fi
+
+  if [[ -z "$body" ]]; then
+    body=""
+  fi
+
+  if [[ -z "$icon" ]]; then
+    icon=""
+  fi
+
+  reminder_id=$(uuidgen)
+  reminder_file="$REMINDERS_DIR/$reminder_id"
+
+  echo -e "$due_datetime\n$summary\n$body\n$icon" > "$reminder_file"
+}
+
+function remove_reminder {
+  local reminder_id="$1"
+
+  if [[ -z "$reminder_id" ]]; then
+    echo "Usage: $0 remove <reminder_id>"
+    exit 1
+  fi
+
+  reminder_file="$REMINDERS_DIR/$reminder_id"
+
+  if [[ ! -f "$reminder_file" ]]; then
+    echo "Reminder not found."
+    exit 1
+  fi
+
+  rm "$reminder_file"
+}
+
+function list_reminders {
+  if [[ ! -d "$REMINDERS_DIR" ]]; then
+    echo "No reminders."
+    exit 0
+  fi
+
+  if [[ ! "$(ls -A "$REMINDERS_DIR")" ]]; then
+    echo "No reminders."
+    exit 0
+  fi
+
+  for reminder_file in "$REMINDERS_DIR/"*; do
+    reminder_id=$(basename "$reminder_file")
+
+    due=$(cat "$reminder_file" | head -n 1)
+    summary=$(cat "$reminder_file" | head -n 2 | tail -n 1)
+    body=$(cat "$reminder_file" | head -n 3 | tail -n 1)
+    icon=$(cat "$reminder_file" | head -n 4 | tail -n 1)
+
+    echo -e "\n$reminder_id"
+    echo "  Due: $due"
+    echo "  Summary: $summary"
+    echo "  Body: $body"
+    echo "  Icon: $icon"
+  done
+}
+
+case "$1" in
+  add)
+    # pass all arguments to add_reminder without the first one
+    shift
+    add_reminder "$@"
+    ;;
+  remove)
+    # pass all arguments to remove_reminder without the first one
+    shift
+    remove_reminder "$@"
+    ;;
+  list)
+    list_reminders
+    ;;
+  *)
+    echo "Usage: $0 {add|remove|list}"
+    exit 1
+esac
