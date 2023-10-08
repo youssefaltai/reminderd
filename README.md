@@ -52,15 +52,15 @@ Before using **reminderd**, ensure you have the following:
 To add a reminder, use the `reminderctl` script as follows:
 
 ```bash
-reminderctl add <due> <summary> [body] [icon] [repeat] [urgency]
+reminderctl add -d <date> -s <summary> [-b <body>] [-i <icon>] [-r <repeat>] [-u <low|normal|critical>]
 ```
 
-- `<due>`: The due date and time for the reminder in a valid date format (e.g., "2023-12-31 2:00 PM" or "tomorrow 10:00").
-- `<summary>`: A short summary or title for the reminder.
-- `[body]`: Optional - Additional details or description of the reminder.
-- `[icon]`: Optional - An icon associated with the reminder.
-- `[repeat]`: Optional - The time interval (in seconds) between repeated reminders. Use 0 for non-repeating reminders.
-- `[urgency]`: Optional - The urgency level of the reminder (low, normal, or critical). Normal by default.
+- `-d`: The due date and time for the reminder in a valid date format (e.g., "2023-12-31 2:00 PM" or "tomorrow 10:00").
+- `-s`: A short summary or title for the reminder.
+- `[-b]`: Optional - Additional details or description of the reminder.
+- `[-i]`: Optional - An icon associated with the reminder.
+- `[-r]`: Optional - The time interval (in seconds) between repeated reminders. Use 0 for non-repeating reminders.
+- `[-u]`: Optional - The urgency level of the reminder (low, normal, or critical). Normal by default.
 
 #### Removing a Reminder
 
@@ -101,13 +101,13 @@ Here are some examples of how to use **reminderctl** to add reminders:
 
 ```bash
 # Add a non-repeating reminder for a dinner appointment
-reminderctl add "2023-12-31 2:00 PM" "Dinner Time" "Don't forget to go eat" ~/Pictures/svg/burger.svg 0 normal
+reminderctl add -d "2023-12-31 2:00 pm" -s "Dinner Time" -b "Don't forget to go eat" -i ~/Pictures/svg/burger.svg
 
 # Add a daily repeating reminder to take medication
-reminderctl add "today 10:00 PM" "Take Medication" "Take one pill every day" ~/Pictures/svg/pill.svg 86400 critical
+reminderctl add -d "today 10:00 am" -s "Take Medication" -i ~/Pictures/svg/pill.svg -r 86400 -u critical
 
 # Add a weekly repeating reminder for a team meeting
-reminderctl add "next sunday 8:00 AM" "Team Meeting" "Discuss project updates" ~/Pictures/svg/team.svg 604800
+reminderctl add -d "next sunday 8:00 am" -s "Team Meeting" -b "Discuss project updates" -r 604800
 ```
 
 ## Contributing

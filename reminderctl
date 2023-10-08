@@ -38,12 +38,12 @@ function get_urgency {
 
 # Utility function to print usages
 function print_usage {
-  echo "Usage: $0 {add|remove|list}"
+  echo "Usage: $0 <add|remove|list>"
   exit 1
 }
 
 function print_add_usage {
-  echo "Usage: $0 add <due> <summary> [body] [icon] [repeat] [urgency]"
+  echo "Usage: $0 add -d <date> -s <summary> [-b <body>] [-i <icon>] [-r <repeat>] [-u <low|normal|critical>]"
   exit 1
 }
 
@@ -53,12 +53,33 @@ function print_remove_usage {
 }
 
 function add_reminder {
-  local due="$1"
-  local summary="$2"
-  local body="$3"
-  local icon="$4"
-  local repeat="$5"
-  local urgency="$6"
+  # Use getopts to parse arguments
+  while getopts ":d:s:b:i:r:u:" opt; do
+    case "$opt" in
+      d)
+        due="$OPTARG"
+        ;;
+      s)
+        summary="$OPTARG"
+        ;;
+      b)
+        body="$OPTARG"
+        ;;
+      i)
+        icon="$OPTARG"
+        ;;
+      r)
+        repeat="$OPTARG"
+        ;;
+      u)
+        urgency="$OPTARG"
+        ;;
+      *)
+        print_add_usage
+        exit 1
+        ;;
+    esac
+  done
 
   if [[ -z "$due" ]]; then
     print_add_usage
