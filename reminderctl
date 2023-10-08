@@ -89,6 +89,10 @@ function add_reminder {
   reminder_id=$(uuidgen)
   reminder_file="$REMINDERS_DIR/$reminder_id"
 
+  if [[ ! -d "$REMINDERS_DIR" ]]; then
+    mkdir -p "$REMINDERS_DIR"
+  fi
+
   echo -e "$due_datetime\n$summary\n$body\n$icon\n$repeat\n$urgency" > "$reminder_file"
 }
 
