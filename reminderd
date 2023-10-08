@@ -53,6 +53,10 @@ function check_dir {
 
 # Check if the reminders directory is empty
 function is_empty {
+    if [ ! -d "$REMINDERS_DIR" ]; then
+        return 0
+    fi
+
     if [ "$(ls -A $REMINDERS_DIR)" ]; then
         return 1
     else
