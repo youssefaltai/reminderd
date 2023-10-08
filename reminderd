@@ -76,12 +76,13 @@ function is_due {
 function display {
     local reminder_file="$1"
 
-    due=$(cat "$reminder_file" | head -n 1)
-    summary=$(cat "$reminder_file" | head -n 2 | tail -n 1)
-    body=$(cat "$reminder_file" | head -n 3 | tail -n 1)
-    icon=$(cat "$reminder_file" | head -n 4 | tail -n 1)
+    due=$(get_due "$reminder_file")
+    summary=$(get_summary "$reminder_file")
+    body=$(get_body "$reminder_file")
+    icon=$(get_icon "$reminder_file")
+    urgency=$(get_urgency "$reminder_file")
 
-    dunstify "$summary" "$body" -i "$icon" -t 0
+    dunstify "$summary" "$body" -i "$icon" -t 0 -u "$urgency"
 }
 
 # Remove a reminder

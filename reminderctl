@@ -42,6 +42,7 @@ function add_reminder {
   local body="$3"
   local icon="$4"
   local repeat="$5"
+  local urgency="$6"
 
   if [[ -z "$due" ]]; then
     echo "Usage: $0 add <due> <summary> [body] [icon]"
@@ -72,10 +73,23 @@ function add_reminder {
     repeat=""
   fi
 
+  if [[ -z "$urgency" ]]; then
+    urgency="normal"
+  else
+    case "$urgency" in
+      low|normal|critical)
+        ;;
+      *)
+        echo "Urgency must be low, normal, or critical."
+        exit 1
+        ;;
+    esac
+  fi
+
   reminder_id=$(uuidgen)
   reminder_file="$REMINDERS_DIR/$reminder_id"
 
-  echo -e "$due_datetime\n$summary\n$body\n$icon\n$repeat" > "$reminder_file"
+  echo -e "$due_datetime\n$summary\n$body\n$icon\n$repeat\n$urgency" > "$reminder_file"
 }
 
 function remove_reminder {
@@ -110,11 +124,12 @@ function list_reminders {
   for reminder_file in "$REMINDERS_DIR/"*; do
     reminder_id=$(basename "$reminder_file")
 
-    due=$(cat "$reminder_file" | head -n 1)
-    summary=$(cat "$reminder_file" | head -n 2 | tail -n 1)
-    body=$(cat "$reminder_file" | head -n 3 | tail -n 1)
-    icon=$(cat "$reminder_file" | head -n 4 | tail -n 1)
-    repeat=$(cat "$reminder_file" | head -n 5 | tail -n 1)
+    due=$(get_due "$reminder_file")
+    summary=$(get_summary "$reminder_file")
+    body=$(get_body "$reminder_file")
+    icon=$(get_icon "$reminder_file")
+    repeat=$(get_repeat "$reminder_file")
+    urgency=$(get_urgency "$reminder_file")
 
     echo -e "\n$reminder_id"
     echo "  Due: $due"
@@ -122,6 +137,7 @@ function list_reminders {
     echo "  Body: $body"
     echo "  Icon: $icon"
     echo "  Repeat: $repeat"
+    echo "  Urgency: $urgency"
   done
 }
 
