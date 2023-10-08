@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# This script is used to check if there are any reminders that need to be
-# notified. It is meant to be run on startup from xinitrc or similar, and
-# should keep running in the background.
-
 # Reminders are stored in the following format:
-# <time>
-# <summary>
-# <body>
-# <icon>
+# <time>: Epoch time
+# <summary>: String
+# <body>: String
+# <icon>: Path to icon
+# <repeat>: Seconds
 
-# The reminder daemon will check for reminders every 30 seconds.
-# If a reminder is due, it will be displayed using dunstify.
+# The reminder daemon will check for reminders every second.
+# If a reminder is due, it will be displayed using dunstify, and then removed.
+# If a reminder has a repeat value, it will be rescheduled.
 
 REMINDERS_DIR="$HOME/.local/share/reminders"
 
@@ -61,12 +59,29 @@ function remove {
     rm "$reminder"
 }
 
+# Reschedule a reminder
+function reschedule {
+  local reminder_file="$1"
+  local repeat=$(cat "$reminder_file" | head -n 5 | tail -n 1)
+  local due=$(cat "$reminder_file" | head -n 1)
+  local new_due=$((due + repeat))
+  # Replace the first line of the reminder file with the new due time
+  sed -i "1s/.*/$new_due/" "$reminder_file"
+}
+
 # Check for reminders
 function check {
     for reminder in "$REMINDERS_DIR"/*; do
         if is_due "$reminder"; then
             display "$reminder"
-            remove "$reminder"
+            # If the reminder has a repeat value, reschedule it
+            # Otherwise, remove it
+            repeat=$(cat "$reminder" | head -n 5 | tail -n 1)
+            if [ -z "$repeat" ]; then
+                remove "$reminder"
+            else
+                reschedule "$reminder"
+            fi
         fi
     done
 }

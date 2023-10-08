@@ -10,6 +10,7 @@ function add_reminder {
   local summary="$2"
   local body="$3"
   local icon="$4"
+  local repeat="$5"
 
   if [[ -z "$due" ]]; then
     echo "Usage: $0 add <due> <summary> [body] [icon]"
@@ -36,10 +37,14 @@ function add_reminder {
     icon=""
   fi
 
+  if [[ -z "$repeat" ]]; then
+    repeat=""
+  fi
+
   reminder_id=$(uuidgen)
   reminder_file="$REMINDERS_DIR/$reminder_id"
 
-  echo -e "$due_datetime\n$summary\n$body\n$icon" > "$reminder_file"
+  echo -e "$due_datetime\n$summary\n$body\n$icon\n$repeat" > "$reminder_file"
 }
 
 function remove_reminder {
@@ -78,12 +83,14 @@ function list_reminders {
     summary=$(cat "$reminder_file" | head -n 2 | tail -n 1)
     body=$(cat "$reminder_file" | head -n 3 | tail -n 1)
     icon=$(cat "$reminder_file" | head -n 4 | tail -n 1)
+    repeat=$(cat "$reminder_file" | head -n 5 | tail -n 1)
 
     echo -e "\n$reminder_id"
     echo "  Due: $due"
     echo "  Summary: $summary"
     echo "  Body: $body"
     echo "  Icon: $icon"
+    echo "  Repeat: $repeat"
   done
 }
 
