@@ -13,6 +13,37 @@
 
 REMINDERS_DIR="$HOME/.local/share/reminders"
 
+# Utility functions to read reminder files
+function get_due {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 1
+}
+
+function get_summary {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 2 | tail -n 1
+}
+
+function get_body {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 3 | tail -n 1
+}
+
+function get_icon {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 4 | tail -n 1
+}
+
+function get_repeat {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 5 | tail -n 1
+}
+
+function get_urgency {
+    local reminder_file="$1"
+    cat "$reminder_file" | head -n 6 | tail -n 1
+}
+
 # Check if the reminders directory exists
 function check_dir {
     if [ ! -d "$REMINDERS_DIR" ]; then
