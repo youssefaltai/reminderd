@@ -36,6 +36,22 @@ function get_urgency {
     cat "$reminder_file" | head -n 6 | tail -n 1
 }
 
+# Utility function to print usages
+function print_usage {
+  echo "Usage: $0 {add|remove|list}"
+  exit 1
+}
+
+function print_add_usage {
+  echo "Usage: $0 add <due> <summary> [body] [icon] [repeat] [urgency]"
+  exit 1
+}
+
+function print_remove_usage {
+  echo "Usage: $0 remove <reminder_id>"
+  exit 1
+}
+
 function add_reminder {
   local due="$1"
   local summary="$2"
@@ -45,7 +61,7 @@ function add_reminder {
   local urgency="$6"
 
   if [[ -z "$due" ]]; then
-    echo "Usage: $0 add <due> <summary> [body] [icon]"
+    print_add_usage
     exit 1
   fi
 
@@ -57,7 +73,7 @@ function add_reminder {
   fi
 
   if [[ -z "$summary" ]]; then
-    echo "Usage: $0 add <due> <summary> [body] [icon]"
+    print_add_usage
     exit 1
   fi
 
@@ -100,7 +116,7 @@ function remove_reminder {
   local reminder_id="$1"
 
   if [[ -z "$reminder_id" ]]; then
-    echo "Usage: $0 remove <reminder_id>"
+    print_remove_usage
     exit 1
   fi
 
@@ -160,6 +176,6 @@ case "$1" in
     list_reminders
     ;;
   *)
-    echo "Usage: $0 {add|remove|list}"
+    print_usage
     exit 1
 esac
