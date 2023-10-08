@@ -117,7 +117,11 @@ function check {
             if [ -z "$repeat" ]; then
                 remove "$reminder"
             else
-                reschedule "$reminder"
+                if [ "$repeat" -eq 0 ]; then
+                    remove "$reminder"
+                else
+                    reschedule "$reminder"
+                fi
             fi
         fi
     done
