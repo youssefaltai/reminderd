@@ -66,9 +66,9 @@ function is_empty {
 
 # Check if a reminder is due
 function is_due {
-    local reminder="$1"
+    local reminder_file="$1"
     local now=$(date +%s)
-    local due=$(cat "$reminder" | head -n 1)
+    local due=$(get_due "$reminder_file")
     if [ "$now" -ge "$due" ]; then
         return 0
     else
@@ -91,15 +91,16 @@ function display {
 
 # Remove a reminder
 function remove {
-    local reminder="$1"
-    rm "$reminder"
+    local reminder_file="$1"
+    rm "$reminder_file"
 }
 
 # Reschedule a reminder
 function reschedule {
   local reminder_file="$1"
-  local repeat=$(cat "$reminder_file" | head -n 5 | tail -n 1)
-  local due=$(cat "$reminder_file" | head -n 1)
+
+  local repeat=$(get_repeat "$reminder_file")
+  local due=$(get_due "$reminder_file")
   local new_due=$((due + repeat))
   # Replace the first line of the reminder file with the new due time
   sed -i "1s/.*/$new_due/" "$reminder_file"
@@ -112,7 +113,7 @@ function check {
             display "$reminder"
             # If the reminder has a repeat value, reschedule it
             # Otherwise, remove it
-            repeat=$(cat "$reminder" | head -n 5 | tail -n 1)
+            repeat=$(get_repeat "$reminder")
             if [ -z "$repeat" ]; then
                 remove "$reminder"
             else
