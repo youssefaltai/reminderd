@@ -70,8 +70,7 @@ function is_due {
     local now=$(date +%s)
     local due=$(get_due "$reminder_file")
 
-    # If a max of 10 seconds passed since the reminder was due, display it
-    if [ "$now" -ge "$due" ] && [ "$now" -le "$((due + 10))" ]; then
+    if [ "$now" -ge "$due" ]; then
         return 0
     else
         return 1
