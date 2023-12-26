@@ -1,6 +1,6 @@
 # reminderd
 
-**reminderd** is a simple daemon designed to keep you organized by sending notifications for due reminders.
+I created this tool to help me keep track of daily tasks and appointments when I'm using my Arch Linux machine, which I'm totally not mentioning just to flex on your soydev ass. Anyway, it is very limited in functionality (does't integrate with any calendar app or anything like that) but it does the job for me. I'm open to suggestions and contributions.
 
 ## Overview
 
